@@ -14,9 +14,15 @@ const App: React.FC = () => {
   const fetchUsers = async () => {
     try {
       const data = await getUsers();
-      setUsers(data);
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        console.error('API returned non-array:', data);
+        setUsers([]); // 空配列でリセット
+      }
     } catch (err) {
-      console.error(err);
+      console.error('API fetch error:', err);
+      setUsers([]); // 例外が起きても空配列で安全
     }
   };
 
