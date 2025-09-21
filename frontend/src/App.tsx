@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { getUsers, createUser, User } from './api/user';
+import React, { useEffect, useState } from 'react';
+import { getUsers, createUser, updateUser, deleteUser, User } from './api/user';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [editingEmail, setEditingEmail] = useState('');
 
-  // 初回レンダリング時にユーザー一覧を取得
   useEffect(() => {
-    fetchUsers();
+    void fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
     try {
       const data = await getUsers();
-      if (Array.isArray(data)) {
-        setUsers(data);
-      } else {
-        console.error('API returned non-array:', data);
-        setUsers([]); // 空配列でリセット
-      }
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('API fetch error:', err);
-      setUsers([]); // 例外が起きても空配列で安全
+      setUsers([]);
     }
   };
 
@@ -31,36 +28,75 @@ const App: React.FC = () => {
     try {
       const newUser = await createUser({ name, email });
       setUsers(prev => [...prev, newUser]);
-      setName('');
-      setEmail('');
+      setName(''); setEmail('');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const startEdit = (user: User) => {
+    setEditingId(user.id);
+    setEditingName(user.name);
+    setEditingEmail(user.email);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingName('');
+    setEditingEmail('');
+  };
+
+  const submitEdit = async () => {
+    if (editingId == null) return;
+    try {
+      const updated = await updateUser(editingId, { name: editingName, email: editingEmail });
+      setUsers(prev => prev.map(u => (u.id === updated.id ? updated : u)));
+      cancelEdit();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('本当に削除しますか？')) return;
+    try {
+      await deleteUser(id);
+      setUsers(prev => prev.filter(u => u.id !== id));
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>ユーザー一覧</h1>
+    <div style={{ padding: 20 }}>
+      <h1>Users</h1>
+
+      <div style={{ marginBottom: 20 }}>
+        <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
+        <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <button onClick={handleAddUser}>Add</button>
+      </div>
+
       <ul>
-        {users.map(u => (
-          <li key={u.id}>{u.name} ({u.email})</li>
+        {Array.isArray(users) && users.map(u => (
+          <li key={u.id}>
+            {editingId === u.id ? (
+              <>
+                <input value={editingName} onChange={e => setEditingName(e.target.value)} />
+                <input value={editingEmail} onChange={e => setEditingEmail(e.target.value)} />
+                <button onClick={submitEdit}>Save</button>
+                <button onClick={cancelEdit}>Cancel</button>
+              </>
+            ) : (
+              <>
+                {u.name} ({u.email})
+                <button onClick={() => startEdit(u)}>Edit</button>
+                <button onClick={() => handleDelete(u.id)}>Delete</button>
+              </>
+            )}
+          </li>
         ))}
       </ul>
-
-      <h2>ユーザー追加</h2>
-      <input
-        type="text"
-        placeholder="名前"
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="メール"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <button onClick={handleAddUser}>追加</button>
     </div>
   );
 };
