@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'http://localhost:3000';
 
 export interface CreateUserDto { name: string; email: string; }
 export interface UpdateUserDto { name?: string; email?: string; }
