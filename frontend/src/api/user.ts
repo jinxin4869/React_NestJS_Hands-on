@@ -1,31 +1,26 @@
-// src/api/user.ts
 import axios from 'axios';
 
-// NestJS 側の URL（デフォルトポート3000）
-const API_BASE = 'http://localhost:3000';
+const API_BASE = 'http://localhost:3001';
 
-// ユーザー作成用の型
-export interface CreateUserDto {
-  name: string;
-  email: string;
-}
+export interface CreateUserDto { name: string; email: string; }
+export interface UpdateUserDto { name?: string; email?: string; }
+export interface User { id: number; name: string; email: string; createdAt: string; }
 
-// ユーザー型（NestJS 側の User に合わせる）
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  createdAt: string;
-}
-
-// ユーザー一覧取得
 export const getUsers = async (): Promise<User[]> => {
-  const response = await axios.get<User[]>(`${API_BASE}/user`);
-  return response.data;
+  const res = await axios.get<User[]>(`${API_BASE}/user`);
+  return res.data;
 };
 
-// ユーザー作成
 export const createUser = async (data: CreateUserDto): Promise<User> => {
-  const response = await axios.post<User>(`${API_BASE}/user`, data);
-  return response.data;
+  const res = await axios.post<User>(`${API_BASE}/user`, data);
+  return res.data;
+};
+
+export const updateUser = async (id: number, data: UpdateUserDto): Promise<User> => {
+  const res = await axios.put<User>(`${API_BASE}/user/${id}`, data);
+  return res.data;
+};
+
+export const deleteUser = async (id: number): Promise<void> => {
+  await axios.delete(`${API_BASE}/user/${id}`);
 };
