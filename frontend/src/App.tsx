@@ -25,6 +25,13 @@ const App: React.FC = () => {
 
   const handleAddUser = async () => {
     if (!name || !email) return;
+
+    // 重複チェック
+    if (users.some(u => u.email === email)) {
+      alert('このメールアドレスは既に登録されています');
+      return;
+    }
+    
     try {
       const newUser = await createUser({ name, email });
       setUsers(prev => [...prev, newUser]);
@@ -69,12 +76,12 @@ const App: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Users</h1>
+      <h1>ユーザー一覧</h1>
 
       <div style={{ marginBottom: 20 }}>
-        <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
-        <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-        <button onClick={handleAddUser}>新規登録</button>
+        <input placeholder="名前" value={name} onChange={e => setName(e.target.value)} />
+        <input placeholder="メール" value={email} onChange={e => setEmail(e.target.value)} />
+        <button onClick={handleAddUser}>追加</button>
       </div>
 
       <ul>
