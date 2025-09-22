@@ -58,7 +58,7 @@ const App: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('本当に削除しますか？')) return;
+    if (window.confirm('本当に削除しますか？')) return;
     try {
       await deleteUser(id);
       setUsers(prev => prev.filter(u => u.id !== id));
@@ -74,7 +74,7 @@ const App: React.FC = () => {
       <div style={{ marginBottom: 20 }}>
         <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
         <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-        <button onClick={handleAddUser}>Add</button>
+        <button onClick={handleAddUser}>新規登録</button>
       </div>
 
       <ul>
@@ -84,14 +84,14 @@ const App: React.FC = () => {
               <>
                 <input value={editingName} onChange={e => setEditingName(e.target.value)} />
                 <input value={editingEmail} onChange={e => setEditingEmail(e.target.value)} />
-                <button onClick={submitEdit}>Save</button>
-                <button onClick={cancelEdit}>Cancel</button>
+                <button onClick={submitEdit}>保存</button>
+                <button onClick={cancelEdit}>キャンセル</button>
               </>
             ) : (
               <>
                 {u.name} ({u.email})
-                <button onClick={() => startEdit(u)}>Edit</button>
-                <button onClick={() => handleDelete(u.id)}>Delete</button>
+                <button onClick={() => startEdit(u)}>編集</button>
+                <button onClick={() => handleDelete(u.id)}>削除</button>
               </>
             )}
           </li>
