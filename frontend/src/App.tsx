@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, createUser, updateUser, deleteUser, User } from './api/user';
+import './App.css';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -31,7 +32,7 @@ const App: React.FC = () => {
       alert('このメールアドレスは既に登録されています');
       return;
     }
-    
+
     try {
       const newUser = await createUser({ name, email });
       setUsers(prev => [...prev, newUser]);
@@ -76,13 +77,15 @@ const App: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>ユーザー一覧</h1>
+      <h1>ユーザー登録</h1>
 
       <div style={{ marginBottom: 20 }}>
         <input placeholder="名前" value={name} onChange={e => setName(e.target.value)} />
         <input placeholder="メール" value={email} onChange={e => setEmail(e.target.value)} />
         <button onClick={handleAddUser}>追加</button>
       </div>
+
+      <h2>ユーザー一覧</h2>
 
       <ul>
         {Array.isArray(users) && users.map(u => (
@@ -91,14 +94,14 @@ const App: React.FC = () => {
               <>
                 <input value={editingName} onChange={e => setEditingName(e.target.value)} />
                 <input value={editingEmail} onChange={e => setEditingEmail(e.target.value)} />
-                <button onClick={submitEdit}>保存</button>
-                <button onClick={cancelEdit}>キャンセル</button>
+                <button className="save" onClick={submitEdit}>保存</button>
+                <button className="cancel" onClick={cancelEdit}>キャンセル</button>
               </>
             ) : (
               <>
                 {u.name} ({u.email})
-                <button onClick={() => startEdit(u)}>編集</button>
-                <button onClick={() => handleDelete(u.id)}>削除</button>
+                <button className="edit" onClick={() => startEdit(u)}>編集</button>
+                <button className="delete" onClick={() => handleDelete(u.id)}>削除</button>
               </>
             )}
           </li>

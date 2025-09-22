@@ -1,69 +1,57 @@
-/* 全体 */
-body {
+/* 全体の余白とフォント */
+.App {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-  margin: 0;
-  padding: 0;
-}
-
-/* コンテナ */
-.container {
-  max-width: 500px;
-  margin: 40px auto;
   padding: 20px;
-  background: #ffffff;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* 見出し */
-h1, h2 {
-  color: #333;
-  margin-bottom: 15px;
-}
-
-/* 入力フォーム */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input {
-  padding: 10px;
+/* 入力フォームとユーザー一覧の余白 */
+input, button {
+  margin: 5px;
+  padding: 8px 12px;
   font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
 }
 
-input:focus {
-  border-color: #0070f3;
-  box-shadow: 0 0 3px rgba(0, 112, 243, 0.5);
-}
-
-/* ボタン */
-button {
-  padding: 10px;
-  font-size: 14px;
-  background: #0070f3;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #005bb5;
-}
-
-/* ユーザーリスト */
 ul {
   list-style: none;
   padding: 0;
 }
 
-.user-item {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
+li {
+  margin: 10px 0; /* ユーザーごとに余白 */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 共通ボタンスタイル */
+button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 編集ボタン */
+button.edit {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 削除ボタン */
+button.delete {
+  background-color: #f44336;
+  color: white;
+}
+
+/* 保存ボタン */
+button.save {
+  background-color: #2196f3;
+  color: white;
+}
+
+/* キャンセルボタン */
+button.cancel {
+  background-color: #9e9e9e;
+  color: white;
 }
